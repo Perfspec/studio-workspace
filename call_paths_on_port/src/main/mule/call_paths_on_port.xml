@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4e1c8626-baaa-40c9-8005-ef16256244f1" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="call_paths_on_portFlow" doc:id="cac8a716-00e8-4176-8dff-91dff84b304d" >
+		<http:listener doc:name="Listener" doc:id="3bdc5299-c8c4-47aa-b495-d74b19756edf" config-ref="HTTP_Listener_config" path="/lewis"/>
+		<set-payload value="I am number 1" doc:name="Set Payload" doc:id="dd568e64-063c-40db-9e4d-cc37f3ca2f9e" mimeType="text/html"/>
+	</flow>
+	<flow name="call_paths_on_portFlow1" doc:id="c9956680-94c6-4b95-8d2d-50f023cf86b8" >
+		<http:listener doc:name="Listener" doc:id="6ee22e0d-aa64-47ab-96b8-b88dc32b8541" config-ref="HTTP_Listener_config" path="/shafeeq"/>
+		<set-payload value="I am number 2" doc:name="Set Payload" doc:id="c5a6525b-741f-4c55-9d02-b760e89a8f80" mimeType="text/html"/>
+	</flow>
+</mule>

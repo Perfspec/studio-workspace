@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="dfe25b5d-053d-4b41-88f1-a1537e95758f" basePath="/see" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<flow name="seemethodFlow" doc:id="d7422360-fb8f-4b4f-850e-4a2e3b1ec170" >
+		<http:listener doc:name="Listener" doc:id="2422c703-477f-4d30-8f37-faf1b7c54873" config-ref="HTTP_Listener_config" path="/method"/>
+		<set-payload value='#[message.attributes.method ++ " SOME"]' doc:name="Set Payload" doc:id="af871d5a-20a4-48f2-b8fa-dcd9b39bb610" mimeType="text/html"/>
+	</flow>
+</mule>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4063e1f5-5c6f-411e-bc9a-3b62cdaeb63d" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="add_2clientsFlow" doc:id="6b2670b6-a4dd-4fd2-b6e5-4403c111b1ee" >
+		<http:listener doc:name="Listener" doc:id="b27d10c5-8452-4571-a389-e67efb8ea302" config-ref="HTTP_Listener_config" path="/Maths" allowedMethods="GET"/>
+		<set-payload value='#["Result is: $((message.attributes.queryParams.no1 as Number) + (message.attributes.queryParams.no2 as Number) as String)"]' doc:name="Set Payload" doc:id="ae3401e1-d2d0-4a92-bd69-a70f301a9550" mimeType="text/html"/>
+	</flow>
+	<flow name="add_2clientsFlow1" doc:id="20992c72-f6ca-4005-a92c-1bbb3ebe5015" >
+		<http:listener doc:name="Listener" doc:id="499577dd-f1aa-42b1-84b6-dcc0f49a0e1f" config-ref="HTTP_Listener_config" path="/Maths" allowedMethods="POST"/>
+		<set-payload value='#["Result is: $((message.payload.no1 as Number) + (message.payload.no2 as Number) as String)"]' doc:name="Set Payload" doc:id="9da581a3-cf1b-4e1e-bde6-bd445ec7ee30" mimeType="text/html"/>
+	</flow>
+</mule>

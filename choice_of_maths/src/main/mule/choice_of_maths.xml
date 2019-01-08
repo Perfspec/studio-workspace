@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a1416619-9325-407f-942c-c3f9f6990522" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="choice_of_mathsFlow_GET" doc:id="2323a2bd-9341-444c-841f-3e459acd1b8b" >
+		<http:listener doc:name="Listener" doc:id="12655446-8f32-4536-8d75-c925a242e965" config-ref="HTTP_Listener_config" path="/Maths" allowedMethods="GET"/>
+		<set-variable value="#[message.attributes.queryParams.C]" doc:name="operation" doc:id="0bb79873-eacc-4066-bf09-8ca5e9c62339" variableName="C" />
+		<set-variable value="#[message.attributes.queryParams.A as Number]" doc:name="number1" doc:id="ff1ca321-e6ce-4cab-9671-ad5d24d939fb" variableName="A"/>
+		<set-variable value="#[message.attributes.queryParams.B as Number]" doc:name="number2" doc:id="557c9241-1a90-437c-be9d-c624669e27b0" variableName="B"/>
+		<choice doc:name="Choice" doc:id="97cba754-acf4-4ca6-bba7-522c240c16b3" >
+			<when expression='#[vars.C=="add"]'>
+				<set-variable value="#[vars.A + vars.B]" doc:name="Set Sum" doc:id="7ea7d29c-a90d-47bf-a4ad-c86820322766" variableName="Output"/>
+			</when>
+			<when expression='#[vars.C=="sub"]'>
+				<set-variable value="#[vars.A - vars.B]" doc:name="Set Difference" doc:id="0648e20a-37f9-4403-9d3d-37bc84f5769b" variableName="Output"/>
+			</when>
+			<when expression='#[vars.C=="mult"]'>
+				<set-variable value="#[vars.A * vars.B]" doc:name="Set Product" doc:id="0eb35060-f3cf-4d1f-a8e2-44cfe130687a" variableName="Output"/>
+			</when>
+			<when expression='#[vars.C=="div"]'>
+				<set-variable value="#[vars.A / vars.B]" doc:name="Set Quotient" doc:id="5ecfdd6f-92d0-4e62-9d01-d1e05848d416" variableName="Output"/>
+			</when>
+			<otherwise >
+				<set-variable value="Please choose either {add, sub, mult or div}" doc:name="Set Default" doc:id="37fde41b-3c69-4cb7-a73a-7ed2a5377b0b" variableName="Output"/>
+			</otherwise>
+		</choice>
+		<choice doc:name="Copy_of_Choice" doc:id="6951252f-d04c-4e0d-a959-f3662ae4cdab">
+			<when expression="#[vars.Output == 666]">
+				<set-variable value="That is the devil's number!" doc:name="Copy_of_Edit Output" doc:id="7a0460d4-2f97-416d-a40f-32d7843865d7" variableName="Output" />
+			</when>
+			<when expression="#[vars.Output == 999]">
+				<set-variable value="Call the Police!!!" doc:name="Copy_of_Set Variable" doc:id="686365ec-4be5-4a3e-b5bb-d570d12fdf84" variableName="Output" />
+			</when>
+		</choice>
+		<set-payload value='#["Result: " ++ (vars.Output as String)]' doc:name="Set Payload" doc:id="2de6a63f-59f0-4203-adc5-3fa4b227e84a" mimeType="text/html"/>
+	</flow>
+	<flow name="choice_of_mathsFlow_POST" doc:id="4c359c3d-8002-4b01-9796-bc85627e32cf" >
+		<http:listener doc:name="Listener" doc:id="01e9ac38-f473-46da-84cd-e2e0fb1a2e57" config-ref="HTTP_Listener_config" path="/Maths" allowedMethods="POST"/>
+		<set-variable value="#[message.payload.C as String]" doc:name="operation" doc:id="50eb827d-5d04-44d2-a0ef-46e6412d2b7d" variableName="C"/>
+		<set-variable value="#[message.payload.A as Number]" doc:name="number1" doc:id="9cd14966-4b91-45ec-af3f-e41eb738dc4e" variableName="A"/>
+		<set-variable value="#[message.payload.B as Number]" doc:name="number2" doc:id="26d1c2d2-53a5-4bb1-8e16-dd84b8f63093" variableName="B"/>
+		<choice doc:name="Choice" doc:id="ed9e22bb-c96a-46d4-882b-e3441b7b2bba" >
+			<when expression='#[vars.C=="add"]'>
+				<set-variable value="#[vars.A + vars.B]" doc:name="Set Sum" doc:id="758553f3-ade7-42c0-a2b0-6655b48a6476" variableName="Output"/>
+			</when>
+			<when expression='#[vars.C=="sub"]'>
+				<set-variable value="#[vars.A - vars.B]" doc:name="Set Difference" doc:id="c8af7ed5-3413-4985-8f7c-4b6549983330" variableName="Output"/>
+			</when>
+			<when expression='#[vars.C=="mult"]'>
+				<set-variable value="#[vars.A * vars.B]" doc:name="Set Product" doc:id="e1ae90b6-aa78-4b9a-b620-36e6b412c34c" variableName="Output"/>
+			</when>
+			<when expression='#[vars.C=="div"]'>
+				<set-variable value="#[vars.A / vars.B]" doc:name="Set Quotient" doc:id="809daa3b-ab57-4643-8a92-ef53d46b0510" variableName="Output"/>
+			</when>
+			<otherwise >
+				<set-variable value="Please choose either {add, sub, mult or div}" doc:name="Set Default" doc:id="8624a44f-3e5f-40de-b2aa-2b25ce5ba920" variableName="Output"/>
+			</otherwise>
+		</choice>
+		<choice doc:name="Choice" doc:id="660e32ab-38e0-4df6-9dfc-69640a6fba14" >
+			<when expression="#[vars.Output == 666]">
+				<set-variable value="That is the devil's number!" doc:name="Edit Output" doc:id="673d7cae-d07e-4fd4-872e-bc57477313e4" variableName="Output"/>
+			</when>
+			<when expression="#[vars.Output == 999]">
+				<set-variable value="Call the Police!!!" doc:name="Set Variable" doc:id="944c6787-6145-4b95-b58f-e8f48c1c3f9f" variableName="Output"/>
+			</when>
+		</choice>
+		<set-payload value='#["Result: " ++ (vars.Output as String)]' doc:name="Set Payload" doc:id="8f7d0208-2015-4615-9f13-65ada7dcdd47" mimeType="text/html"/>
+	</flow>
+</mule>

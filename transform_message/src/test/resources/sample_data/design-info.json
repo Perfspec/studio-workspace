@@ -1,0 +1,9 @@
+{
+  "sampleData": {
+    "cf2bd88f-4e4f-4e22-b22a-5ae68738daab": {
+      "vars-Chemistry": "sample_data/defaultnumbertype.dwl",
+      "vars-Maths": "sample_data/defaultnumbertype_1.dwl",
+      "vars-Physics": "sample_data/defaultnumbertype_2.dwl"
+    }
+  }
+}

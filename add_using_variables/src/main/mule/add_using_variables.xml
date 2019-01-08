@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3fc35de8-ae7f-403b-ab98-b7ebedb9af78" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="add_using_variablesFlow_GET" doc:id="932fb284-8025-4512-baca-333a75279afd" >
+		<http:listener doc:name="Listener" doc:id="e77f443c-69d1-4a16-a6e2-860325947716" config-ref="HTTP_Listener_config" path="/Maths" allowedMethods="GET"/>
+		<set-variable value="#[(message.attributes.queryParams.no1 as Number)]" doc:name="firstNumber" doc:id="7661ca1e-eef5-4b2d-8dab-38f5f3e01f3b" variableName="A"/>
+		<set-variable value="#[(message.attributes.queryParams.no2 as Number)]" doc:name="secondNumber" doc:id="eb548bfc-f5bc-477c-9bd1-5401d9087710" variableName="B"/>
+		<set-variable value="#[vars.A + vars.B]" doc:name="sum" doc:id="5913aafd-98bf-4564-9176-5e14903d72e7" variableName="C"/>
+		<set-payload value='#["Result: " ++ (vars.C as String)]' doc:name="Set Payload" doc:id="29a791d4-ac79-49a2-b002-65fcd224a76b" mimeType="text/html"/>
+	</flow>
+	<flow name="add_using_variablesFlow_POST" doc:id="f2aceaed-d40b-45f8-b108-3ca8ef7e6896" >
+		<http:listener doc:name="Listener" doc:id="b863e5e6-f748-43d6-8a03-e8b0fcd66616" config-ref="HTTP_Listener_config" path="/Maths" allowedMethods="POST"/>
+		<set-variable value="#[(message.payload.no1 as Number)]" doc:name="firstNumber" doc:id="a40b946b-9175-4799-8745-4c1d50869a7c" variableName="A"/>
+		<set-variable value="#[(message.payload.no1 as Number)]" doc:name="secondNumber" doc:id="c4d5b64e-e494-44ac-bd7d-3f863c4b7cea" variableName="B"/>
+		<set-variable value="#[vars.A + vars.B]" doc:name="sum" doc:id="2f7342fc-4287-4cd9-8591-9adfcf8ec134" variableName="C"/>
+		<set-payload value='#["Result: " ++ (vars.C as String)]' doc:name="Set Payload" doc:id="7a78d8f2-c4cb-4213-b9d0-5a7d63df2045" mimeType="text/html"/>
+	</flow>
+</mule>

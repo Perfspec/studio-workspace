@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2c7a19a1-dd2d-4c1b-bef1-05deb8eaaeb0" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="transform_messageFlow" doc:id="67612e3e-aec0-4bc5-bbb6-f4d321cd9bad" >
+		<http:listener doc:name="Listener" doc:id="7841e43e-c443-469a-bd13-ed26a4bc8c6c" config-ref="HTTP_Listener_config" path="/tm" allowedMethods="POST"/>
+		<set-variable value="#[message.payload.Physics as Number]" doc:name="Set Physics" doc:id="f040f49e-dc36-4f22-a3ce-4c599493d8a0" variableName="Physics"/>
+		<set-variable value="#[message.payload.Chemistry as Number]" doc:name="Set Chemistry" doc:id="00f5e339-63c7-4418-84c2-867d959a05cc" variableName="Chemistry"/>
+		<set-variable value="#[message.payload.Maths as Number]" doc:name="Set Maths" doc:id="974b1e47-0790-4224-a7cc-3bbe5e2480f7" variableName="Maths"/>
+		<ee:transform doc:name="Transform Message" doc:id="cf2bd88f-4e4f-4e22-b22a-5ae68738daab" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var academy = "QA Consulting"
+var total = vars.Maths + vars.Chemistry + vars.Physics
+var maxTotalMark = 30
+fun percent(mark, max) = mark / max
+var percentage = percent(total, maxTotalMark)
+var grade = 
+	if(percentage >= 0.9)
+		"A+"
+	else if(percentage >= 0.8)
+		"A"
+	else if(percentage >= 0.7)
+		"B"
+	else if(percentage >= 0.6)
+		"C"
+	else
+		"Fail"
+---
+{
+	"Result": {
+		"AcademyName": academy,
+		"PhysicsMark": vars.Physics,
+		"ChemistryMark": vars.Chemistry,
+		"MathsMark": vars.Maths,
+		"TotalPercentage": percentage,
+		"Grade": grade
+		
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
