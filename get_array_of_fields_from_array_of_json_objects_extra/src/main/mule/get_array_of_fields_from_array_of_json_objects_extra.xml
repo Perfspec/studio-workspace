@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d3de9203-a89e-47e3-85a3-dbb64c838151" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="get_array_of_fields_from_array_of_json_objects_extraFlow" doc:id="5f2d2b1f-415d-4964-a2c5-1092fc4b4f34" >
+		<http:listener doc:name="Listener" doc:id="aa4cb49d-5bbf-434b-8dab-c0f973d5f852" config-ref="HTTP_Listener_config" path="/which"/>
+		<flow-ref doc:name="Store Payload As Variables" doc:id="38b0b7eb-8920-4147-892f-6efa98a229c9" name="storePayloadAsVars"/>
+		<ee:transform doc:name="Transform Message" doc:id="c6a2a817-a4e7-4744-a79b-4ec007db2b94">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+import some from dw::core::Arrays
+fun dispUserId(bool, item) = [userId: item.userId] some bool
+output application/json
+---
+payload map ((item, index) -> flatten([
+      userId: item.userId
+   ])
+)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<sub-flow name="storePayloadAsVars" doc:id="a0cc5d07-0832-4fe5-9347-f79d64f406f0" >
+		<choice doc:name="Choice" doc:id="27f6fb85-4323-46fc-b3ce-dcf2ed78b3bd">
+			<when expression="#[message.payload.userId]">
+				<set-variable value="#[message.payload.userId as Boolean]" doc:name="userId" doc:id="c3140ece-0487-4917-ad3e-7b7b29741c8c" variableName="userId" />
+			</when>
+			<otherwise>
+				<set-variable value="#[false]" doc:name="Copy_of_userId" doc:id="27734c26-6447-475d-a34f-bf4c248a3ac7" variableName="userId" />
+			</otherwise>
+		</choice>
+		<choice doc:name="Choice" doc:id="d042ddfb-df39-4751-bf09-75ebce6f9890">
+			<when expression="#[message.payload.id]">
+				<set-variable value="#[message.payload.id as Boolean]" doc:name="id" doc:id="38b75a8d-72fa-43f0-b368-a632ff3a4a42" variableName="id" />
+			</when>
+			<otherwise >
+				<set-variable value="#[false]" doc:name="Copy_of_id" doc:id="38435a76-e35d-40d4-9610-5c41e0aef124" variableName="id" />
+			</otherwise>
+		</choice>
+		<choice doc:name="Choice" doc:id="33c64d01-0f2a-43ca-a8ae-c5e37623e2a2">
+			<when expression="#[message.payload.title]">
+				<set-variable value="#[message.payload.title as Boolean]" doc:name="title" doc:id="96342e53-adf1-4f99-bfda-60d56f696dae" variableName="title" />
+			</when>
+			<otherwise >
+				<set-variable value="#[false]" doc:name="Copy_of_title" doc:id="b30d0832-e91b-498f-85be-fd01be8b8f35" variableName="title" />
+			</otherwise>
+		</choice>
+		<choice doc:name="Choice" doc:id="5e1d12ce-e3d7-493b-a325-e501124900c6">
+			<when expression="#[message.payload.body]">
+				<set-variable value="#[message.payload.body as Boolean]" doc:name="body" doc:id="f8cd667d-eea9-48a1-a6bf-3294768c4d5a" variableName="body" />
+			</when>
+			<otherwise >
+				<set-variable value="#[false]" doc:name="Copy_of_body" doc:id="1f72a7e7-17d1-483c-a270-3d0edc51f5a7" variableName="body" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

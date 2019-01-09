@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0a99661d-b185-47c9-aa71-71d48a4cd162" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="here_we_go_subflowFlow" doc:id="2bd5d311-3a94-465e-b865-85b49455938a" >
+		<http:listener doc:name="Listener" doc:id="20fb321f-fb04-4dac-abf6-c3a58a5a9730" config-ref="HTTP_Listener_config" path="/Maths" allowedMethods="POST"/>
+		<set-variable value="#[message.payload.number1 as Number]" doc:name="No1" doc:id="8c2648cf-4138-4eed-9af2-984fbdb66993" variableName="No1"/>
+		<set-variable value="#[message.payload.number2 as Number]" doc:name="No2" doc:id="8f5ee6ad-6dc8-4484-a4c4-a12549777def" variableName="No2"/>
+		<set-variable value="#[message.payload.operator as String]" doc:name="Op" doc:id="c7c49662-1876-4033-8b56-443d992a1c5e" variableName="Op"/>
+		<flow-ref doc:name="Flow Reference" doc:id="749bdaa3-d325-4e86-9b24-50c092bfb78c" name="choice_subflow"/>
+		<ee:transform doc:name="Transform Message" doc:id="f0c36be1-540e-4946-b67d-ec0f374547c5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Result": vars.Result
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<sub-flow name="choice_subflow" doc:id="2887a005-2af1-4689-b6d2-9e4cf8257752" >
+		<choice doc:name="Choice" doc:id="fcfdc265-7a4e-438c-8189-80df364f0b62" >
+			<when expression='#[vars.Op=="add"]'>
+				<set-variable value="#[vars.No1 + vars.No2]" doc:name="add" doc:id="1c26b3ce-1170-497f-91f2-8ae0a7b21295" variableName="Result"/>
+			</when>
+			<when expression='#[vars.Op=="sub"]'>
+				<set-variable value="#[vars.No1 - vars.No2]" doc:name="subtract" doc:id="bbfedd5d-a1dc-4107-9afc-3885a0568768" variableName="Result"/>
+			</when>
+			<when expression='#[vars.Op=="mult"]'>
+				<set-variable value="#[vars.No1 * vars.No2]" doc:name="multiply" doc:id="1eac7744-5d1f-45c6-8b84-a57b689a6a94" variableName="Result"/>
+			</when>
+			<when expression='#[vars.Op=="div"]'>
+				<set-variable value="#[vars.No1 / vars.No2]" doc:name="divide" doc:id="d815974a-70c3-4b28-b9f3-6bef97965870" variableName="Result"/>
+			</when>
+			<otherwise >
+				<set-variable value="Fool of a Took" doc:name="default" doc:id="b7589ce8-bce2-4d56-a658-229de1189848" variableName="Result"/>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>
